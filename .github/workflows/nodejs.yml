@@ -1,47 +1,25 @@
-name: Code junction build
-on: 
-  push:
-    branches: 
-      - master
-  pull_request:
-    branches: 
-      - master
+name: AR-ar-dashboard Actions
+on: workflow_dispatch   # [push, workflow_dispatch]
+
+env:
+  AWS_REGION: us-east-1
+permissions:
+  contents: write
+
 jobs:
-  ubuntu-build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
+  build angular:
+    run-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build
-    - run: npm test
-      env:
-        CI: true
-  windows-build:
+      - uses: actions/checkout@v4
 
-    runs-on: windows-latest
+      -name: Setup Node JS
+       uses: actions/setup-node@v4
+       with:
+          node version: 18.x
+      
+      - name: Install dependencies
+        run: npm install
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build
-    - run: npm test
-      env:
-        CI: true
+      - name: Build
+        run: npm run build
